@@ -1,0 +1,15 @@
+TODO Mobile App:
+
+FEED : 
+recupere toutes les datas : pubDate - Description - Title - Link - Author - Category
+Display la description dans une Webview
+
+NOTIFICATIONS :
+activation des notifications
+
+LiveWallpaper:
+A supprimer
+
+UX: 
+Mettre une gridView dans le drawerLayout pour présenter les feeds, permettre de bouger, supprimer et ajouter des flux
+Presenter le drawerlayout ouvert au lancement de l'app
