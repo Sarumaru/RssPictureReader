@@ -7,7 +7,7 @@
         <item>FuckYeahMountainbiking</item>
     </string-array>
     <string-array name="base_urls">
-        <item>http://goprooftheday.tumblr.com/rss</item>
+        <item>http://www.nextinpact.com/rss/news.xml</item>
         <item>http://onlysupercars.tumblr.com/rss</item>
         <item>http://fuckyeahmountainbiking.tumblr.com/rss</item>
     </string-array>

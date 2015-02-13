@@ -27,7 +27,7 @@ import android.widget.Toast;
 import com.jujujuijk.android.database.Feed;
 import com.jujujuijk.android.database.MyDatabase;
 import com.jujujuijk.android.dialog.AddFeedDialog;
-import com.jujujuijk.android.fragment.ImageFragment;
+import com.jujujuijk.android.fragment.ItemFragment;
 import com.jujujuijk.android.fragment.SettingsFragment;
 import com.jujujuijk.android.fragment.ShowFeedFragment;
 import com.jujujuijk.android.asynctask.AutocompleteDataParser;
@@ -41,9 +41,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends FragmentActivity implements MyDatabase.IDatabaseWatcher {
-
-    // LiveWallpaper Utils
-    private final LiveWallpaperChooser mLiveWallpaperUtil = new LiveWallpaperChooser();
 
     // Settings fragment
     private final SettingsFragment mSettingsFragment = new SettingsFragment();
@@ -264,18 +261,18 @@ public class MainActivity extends FragmentActivity implements MyDatabase.IDataba
                 dialog.show();
                 break;
             case R.id.button_save_pic:
-                Fragment f = getSupportFragmentManager().findFragmentByTag("image");
-                if (f != null)
-                    ((ShowFeedFragment) f).dispatchAction(ImageFragment.Action.SAVE);
+//                Fragment f = getSupportFragmentManager().findFragmentByTag("image");
+//                if (f != null)
+//                    ((ShowFeedFragment) f).dispatchAction(ItemFragment.Action.SAVE);
                 break;
             case R.id.button_set_wallpaper:
-                Fragment ff = getSupportFragmentManager().findFragmentByTag("image");
-                if (ff != null) {
-                    if (ff.isHidden()) // HACK INSIDE: SET_WALLPAPER will fail. Just to show the "Action unavailable" message
-                        ((ShowFeedFragment) ff).dispatchAction(ImageFragment.Action.SET_WALLPAPER);
-                    else // ShowFeedFragment is present and not hidden. Normal behavior
-                        mLiveWallpaperUtil.askForLiveWallpaper(pos);
-                }
+//                Fragment ff = getSupportFragmentManager().findFragmentByTag("image");
+//                if (ff != null) {
+//                    if (ff.isHidden()) // HACK INSIDE: SET_WALLPAPER will fail. Just to show the "Action unavailable" message
+//                        ((ShowFeedFragment) ff).dispatchAction(ItemFragment.Action.SET_WALLPAPER);
+//                    else // ShowFeedFragment is present and not hidden. Normal behavior
+//                        mLiveWallpaperUtil.askForLiveWallpaper(pos);
+//                }
                 break;
             case R.id.button_settings:
                 showSettings();
@@ -487,53 +484,6 @@ public class MainActivity extends FragmentActivity implements MyDatabase.IDataba
             Fragment f = getSupportFragmentManager().findFragmentByTag("settings");
             if (f != null)
                 ((SettingsFragment) f).updateStoragePicLocation(path);
-        }
-    }
-
-    private class LiveWallpaperChooser {
-
-        private static final int VALID_WALLPAPER = 1;  // The wallpaper intent request code
-
-        public void askForLiveWallpaper(final int pos) {
-            AlertDialog.Builder builder = null;
-            Dialog dialog = null;
-
-            builder = new AlertDialog.Builder(MainActivity.this);
-            builder.setTitle(getResources().getString(R.string.ask_live_wallpaper) + " "
-                    + mFeedList.get(pos).getName() + "?");
-            builder.setPositiveButton(R.string.yes,
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            removeLiveWallpaper();
-                            mFeedList.get(pos).setNotify(mFeedList.get(pos).getNotify() | Feed.Notify.LIVE_WALLPAPER);
-                            MyDatabase.getInstance().updateFeed(mFeedList.get(pos));
-
-                            Intent intent = new Intent();
-
-                            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
-                                intent.setAction(WallpaperManager.ACTION_LIVE_WALLPAPER_CHOOSER);
-                            } else {
-                                String c = LiveWallpaperService.class.getCanonicalName();
-
-                                intent.setAction(WallpaperManager.ACTION_CHANGE_LIVE_WALLPAPER);
-                                intent.putExtra(WallpaperManager.EXTRA_LIVE_WALLPAPER_COMPONENT, new ComponentName(getPackageName(), c));
-                            }
-                            startActivityForResult(intent, VALID_WALLPAPER);
-                        }
-                    });
-            builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    removeLiveWallpaper();
-                    Fragment f = getSupportFragmentManager().findFragmentByTag("image");
-                    if (f != null)
-                        ((ShowFeedFragment) f).dispatchAction(ImageFragment.Action.SET_WALLPAPER);
-                }
-            });
-            // Create the AlertDialog object and return it
-            dialog = builder.create();
-
-            dialog.show();
         }
     }
 

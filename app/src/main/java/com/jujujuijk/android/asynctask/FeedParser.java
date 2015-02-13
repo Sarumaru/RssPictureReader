@@ -24,7 +24,7 @@ public class FeedParser extends
 
     protected RssParserCallBack m_parent = null;
 
-    protected static final int NB_MAX_LOAD = ShowFeedFragment.NB_MAX_IMAGES;
+    protected static final int NB_MAX_LOAD = ShowFeedFragment.NB_MAX_ITEMS;
 
     protected Feed mFeed;
     protected URL mUrl;
@@ -62,41 +62,56 @@ public class FeedParser extends
                     NodeList desc = elem.getElementsByTagName("description");
                     NodeList date = elem.getElementsByTagName("pubDate");
                     NodeList title = elem.getElementsByTagName("title");
+                    NodeList link = elem.getElementsByTagName("link");
+                    NodeList author = elem.getElementsByTagName("author");
+                    NodeList category = elem.getElementsByTagName("category");
 
-                    if (desc.getLength() != 1 || date.getLength() != 1
-                            || title.getLength() != 1)
+                    if (desc.getLength() != 1 || title.getLength() != 1)
                         continue;
 
                     if (ret == null)
                         ret = new ArrayList<Bundle>();
 
+                    String strTitle = title.item(0).getTextContent();
                     String strDesc = desc.item(0).getTextContent();
+                    String imageUrl = null;
+                    String strDate = null;
+                    String strLink = null;
+                    String strAuthor = null;
+                    String strCategory = null;
+
+                    if (date.getLength() > 0)
+                        strDate = (String) date.item(0).getTextContent().subSequence(5, 25);
+                    if (author.getLength() > 0)
+                        strAuthor = author.item(0).getTextContent();
+                    if (link.getLength() > 0)
+                        strLink = link.item(0).getTextContent();
+                    if (category.getLength() > 0)
+                        strCategory = category.item(0).getTextContent();
 
                     final Pattern ptrn = Pattern.compile("<img src=\"(.+?)\"/>");
                     final Matcher mtchr = ptrn.matcher(strDesc);
                     if (mtchr.find()) {
-                        strDesc = strDesc.substring(mtchr.start(), mtchr.end()).replace("<img src=\"", "").replace("\"/>", "");
-                    } else {
-                        NodeList desc2 = elem.getElementsByTagName("content:encoded");
-                        strDesc = desc2.item(0).getTextContent();
-                        strDesc = (String) strDesc.substring(strDesc.indexOf("<img"));
-                        strDesc = (String) strDesc.subSequence(
-                                strDesc.indexOf("src=\"http://"),
-                                strDesc.indexOf("\"", strDesc.indexOf("src=\"http://") + 10));
-                        strDesc = strDesc.substring(strDesc.indexOf("http://"));
+                        imageUrl = strDesc.substring(mtchr.start(), mtchr.end()).replace("<img src=\"", "").replace("\"/>", "");
                     }
 
-                    String strDate = date.item(0).getTextContent();
-                    strDate = (String) strDate.subSequence(5, 16);
-
-                    String strTitle = title.item(0).getTextContent();
 
                     Bundle b = new Bundle();
+                    b.putInt("id", i);
                     b.putString("feed", mFeed.getName());
                     b.putString("title", strTitle);
-                    b.putString("date", strDate);
-                    b.putString("url", strDesc);
-                    b.putInt("id", i);
+                    b.putString("description", strDesc);
+
+                    if (strLink != null)
+                        b.putString("link", strLink);
+                    if (strAuthor != null)
+                        b.putString("author", strAuthor);
+                    if (strCategory != null)
+                        b.putString("category", strCategory);
+                    if (strDate != null)
+                        b.putString("date", strDate);
+                    if (imageUrl != null)
+                        b.putString("imageUrl", imageUrl);
 
                     ret.add(b);
                 } catch (Exception e) {
