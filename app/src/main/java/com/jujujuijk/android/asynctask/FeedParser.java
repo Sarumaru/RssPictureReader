@@ -10,6 +10,7 @@ import com.jujujuijk.android.fragment.ShowFeedFragment;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+import org.xml.sax.Attributes;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -65,6 +66,7 @@ public class FeedParser extends
                     NodeList link = elem.getElementsByTagName("link");
                     NodeList author = elem.getElementsByTagName("author");
                     NodeList category = elem.getElementsByTagName("category");
+                    NodeList enclosure = elem.getElementsByTagName("enclosure");
 
                     if (desc.getLength() != 1 || title.getLength() != 1)
                         continue;
@@ -89,11 +91,17 @@ public class FeedParser extends
                     if (category.getLength() > 0)
                         strCategory = category.item(0).getTextContent();
 
-                    final Pattern ptrn = Pattern.compile("<img src=\"(.+?)\"/>");
-                    final Matcher mtchr = ptrn.matcher(strDesc);
-                    if (mtchr.find()) {
-                        imageUrl = strDesc.substring(mtchr.start(), mtchr.end()).replace("<img src=\"", "").replace("\"/>", "");
+
+                    if (enclosure.getLength() > 0) {
+                        Element tmp = (Element) enclosure.item(0);
+                        if (tmp.getAttribute("type").contains("image"))
+                            imageUrl = tmp.getAttribute("url");
                     }
+//                    final Pattern ptrn = Pattern.compile("<img src=\"(.+?)\"/>");
+//                    final Matcher mtchr = ptrn.matcher(strDesc);
+//                    if (mtchr.find()) {
+//                        imageUrl = strDesc.substring(mtchr.start(), mtchr.end()).replace("<img src=\"", "").replace("\"/>", "");
+//                    }
 
 
                     Bundle b = new Bundle();

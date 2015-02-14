@@ -44,6 +44,10 @@
     <string name="error">Error:</string>
     <string name="choose">Choose:</string>
     <string name="reset_default_location">Reset to default location</string>
+    <string name="days">day(s)</string>
+    <string name="hours">hour(s)</string>
+    <string name="minutes">minute(s)</string>
+    <string name="ago">ago</string>
 
     <string name="news_v2.2">- Error handling improved\n- Options on long click: set as wallpaper</string>
     <string name="news_v3.0">- Screen orientation: doesn\'t reload pictures anymore</string>

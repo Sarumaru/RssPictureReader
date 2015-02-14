@@ -44,6 +44,11 @@
     <string name="error">Erreur : </string>
     <string name="choose">Choisir: </string>
     <string name="reset_default_location">Restaurer emplac. par défaut</string>
+    <string name="days">jour(s)</string>
+    <string name="hours">heure(s)</string>
+    <string name="minutes">minute(s)</string>
+    <string name="ago">il y a</string>
+
 
     <string name="news_v2.2">- Meilleure gestion des erreurs\n- Options sur le long click : mettre en fond d\'écran</string>
     <string name="news_v3.0">- Orientation de l\'écran : ne recharge plus les images</string>
