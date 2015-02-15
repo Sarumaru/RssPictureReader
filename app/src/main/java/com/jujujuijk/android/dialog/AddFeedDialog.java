@@ -4,7 +4,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -22,9 +21,6 @@ import com.jujujuijk.android.rssreader.R;
 import java.util.ArrayList;
 import java.util.Collections;
 
-/**
- * Created by Claudy Focan on 05/07/13.
- */
 public class AddFeedDialog extends Dialog {
 
     MainActivity mParent;
@@ -113,7 +109,8 @@ public class AddFeedDialog extends Dialog {
 
         Dialog mCaller = null;
 
-        public AddFeedItemClickListener() {}
+        public AddFeedItemClickListener() {
+        }
 
         public AddFeedItemClickListener(Dialog caller) {
             mCaller = caller;

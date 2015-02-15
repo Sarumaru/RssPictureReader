@@ -3,7 +3,6 @@ package com.jujujuijk.android.service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 
 import com.jujujuijk.android.database.Feed;
 import com.jujujuijk.android.database.MyDatabase;
@@ -11,9 +10,6 @@ import com.jujujuijk.android.database.MyDatabase;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by jujujuijk on 7/8/13.
- */
 public class ServiceBroadcastReceiver extends BroadcastReceiver {
 
     @Override

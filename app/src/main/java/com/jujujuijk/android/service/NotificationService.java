@@ -12,11 +12,11 @@ import android.os.SystemClock;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
-import com.jujujuijk.android.rssreader.MainActivity;
-import com.jujujuijk.android.rssreader.R;
+import com.jujujuijk.android.asynctask.FeedParser;
 import com.jujujuijk.android.database.Feed;
 import com.jujujuijk.android.database.MyDatabase;
-import com.jujujuijk.android.asynctask.FeedParser;
+import com.jujujuijk.android.rssreader.MainActivity;
+import com.jujujuijk.android.rssreader.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,7 +55,6 @@ public class NotificationService
     @Override
     protected void onHandleIntent(Intent intent) {
 
-//        Log.e("boap", "Debut onHandleIntent");
         String action = intent == null ? ACTION_START : intent.getAction();
 
         if (action == null || action.equals(ACTION_START)) {
@@ -66,20 +65,18 @@ public class NotificationService
     }
 
     private void startNotificationLoop() {
-//        Log.e("boap", "Je lance la boucle (startnotificationloop)");
-
         MyDatabase.getInstance().follow(this);
         mNotificationManager = (NotificationManager)
                 getSystemService(NOTIFICATION_SERVICE);
 
         int i = 0;
         while (true) {
-//            Log.e("boap", "BOAP loopAction! " + i++);
             loopAction();
             synchronized (this) {
                 try {
                     wait(TIMER_MIN * 60000 + TIMER_SEC * 1000);
-                } catch (InterruptedException e) {}
+                } catch (InterruptedException e) {
+                }
             }
         }
     }
@@ -175,9 +172,8 @@ public class NotificationService
     }
 
     @Override
-    public void onRssParserPostExecute(List<Bundle> images, Feed oldFeed) {
-        if (images == null || images.size() != 1) {
-            Log.e("rssreader", oldFeed.getName() + ": parser returned smthg else than 1 image");
+    public void onRssParserPostExecute(List<Bundle> items, Feed oldFeed) {
+        if (items == null || items.size() != 1) {
             return;
         }
         // We get a new feed from db in case where it has changed during the url fetching
@@ -185,12 +181,12 @@ public class NotificationService
         if (feed == null)
             return;
 
-        String lastPic = images.get(0).getString("url");
+        String lastItem = items.get(0).getString("url");
 
-        if (feed.getPictureLast().equals(lastPic))
+        if (feed.getPictureLast().equals(lastItem))
             return;
 
-        feed.setPictureLast(lastPic);
+        feed.setPictureLast(lastItem);
 
         MyDatabase.getInstance().updateFeed(feed);
     }

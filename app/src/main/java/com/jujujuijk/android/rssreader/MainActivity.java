@@ -2,8 +2,6 @@ package com.jujujuijk.android.rssreader;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.WallpaperManager;
-import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -24,18 +22,14 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
+import com.jujujuijk.android.asynctask.AutocompleteDataParser;
 import com.jujujuijk.android.database.Feed;
 import com.jujujuijk.android.database.MyDatabase;
 import com.jujujuijk.android.dialog.AddFeedDialog;
-import com.jujujuijk.android.fragment.ItemFragment;
 import com.jujujuijk.android.fragment.SettingsFragment;
 import com.jujujuijk.android.fragment.ShowFeedFragment;
-import com.jujujuijk.android.asynctask.AutocompleteDataParser;
-import com.jujujuijk.android.service.LiveWallpaperService;
 import com.jujujuijk.android.service.NotificationService;
 import com.jujujuijk.android.service.NotificationServiceTools;
-
-import net.bgreco.DirectoryPicker;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -146,9 +140,6 @@ public class MainActivity extends FragmentActivity implements MyDatabase.IDataba
     }
 
     private void onCreateCommonTasks() {
-        // Show 'whats new' dialog after an update
-        new UpdateInfo(this).run();
-
         // Get all feeds from database
         mFeedList = MyDatabase.getInstance().getAllFeeds();
 
@@ -259,20 +250,6 @@ public class MainActivity extends FragmentActivity implements MyDatabase.IDataba
                 dialog = builder.create();
 
                 dialog.show();
-                break;
-            case R.id.button_save_pic:
-//                Fragment f = getSupportFragmentManager().findFragmentByTag("image");
-//                if (f != null)
-//                    ((ShowFeedFragment) f).dispatchAction(ItemFragment.Action.SAVE);
-                break;
-            case R.id.button_set_wallpaper:
-//                Fragment ff = getSupportFragmentManager().findFragmentByTag("image");
-//                if (ff != null) {
-//                    if (ff.isHidden()) // HACK INSIDE: SET_WALLPAPER will fail. Just to show the "Action unavailable" message
-//                        ((ShowFeedFragment) ff).dispatchAction(ItemFragment.Action.SET_WALLPAPER);
-//                    else // ShowFeedFragment is present and not hidden. Normal behavior
-//                        mLiveWallpaperUtil.askForLiveWallpaper(pos);
-//                }
                 break;
             case R.id.button_settings:
                 showSettings();
@@ -404,19 +381,6 @@ public class MainActivity extends FragmentActivity implements MyDatabase.IDataba
     public boolean onPrepareOptionsMenu(Menu menu) {
         // If the nav drawer is open, hide action items related to the content view
         boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
-        menu.findItem(R.id.button_save_pic).setVisible(!drawerOpen);
-        menu.findItem(R.id.button_set_wallpaper).setVisible(!drawerOpen);
-        // Propose to disable live wallpaper if enabled
-//        menu.findItem(R.id.button_unset_live_wallpaper).setVisible(false);
-//        synchronized (mFeedList) {
-//            for (Feed f : mFeedList) {
-//                if ((f.getNotify() & Feed.Notify.LIVE_WALLPAPER) != 0) {
-//                    menu.findItem(R.id.button_unset_live_wallpaper).setVisible(true);
-//                    break;
-//                }
-//            }
-//        }
-
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -473,18 +437,6 @@ public class MainActivity extends FragmentActivity implements MyDatabase.IDataba
     @Override
     public void notifyFeedListChanged() {
         ((SimpleAdapter) mDrawerList.getAdapter()).notifyDataSetChanged();
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == DirectoryPicker.PICK_DIRECTORY && resultCode == RESULT_OK) {
-            Bundle extras = data.getExtras();
-            String path = (String) extras.get(DirectoryPicker.CHOSEN_DIRECTORY);
-
-            Fragment f = getSupportFragmentManager().findFragmentByTag("settings");
-            if (f != null)
-                ((SettingsFragment) f).updateStoragePicLocation(path);
-        }
     }
 
 }

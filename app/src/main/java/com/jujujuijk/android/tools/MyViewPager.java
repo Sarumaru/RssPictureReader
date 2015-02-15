@@ -1,77 +1,59 @@
 package com.jujujuijk.android.tools;
 
-import com.jujujuijk.android.fragment.ShowFeedFragment;
-
 import android.content.Context;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.MotionEvent;
+
+import com.jujujuijk.android.fragment.ShowFeedFragment;
 
 public class MyViewPager extends ViewPager {
 
-	public int m_lastLoadedId = -1;
-	private ShowFeedFragment m_parent = null;
-	private PageChangeListener m_listener = new PageChangeListener();
+    public int mLastLoadedId = -1;
+    private ShowFeedFragment mParent = null;
+    private PageChangeListener mListener = new PageChangeListener();
 
-	public MyViewPager(Context context) {
-		super(context);
-	}
+    public MyViewPager(Context context) {
+        super(context);
+    }
 
-	public MyViewPager(Context context, AttributeSet attrs) {
-		super(context, attrs);
-	}
+    public MyViewPager(Context context, AttributeSet attrs) {
+        super(context, attrs);
+    }
 
-	public void setParent(ShowFeedFragment parent) {
-		m_parent = parent;
-	}
+    public void setParent(ShowFeedFragment parent) {
+        mParent = parent;
+    }
 
-	public void setOnPageChangeListener() {
-		super.setOnPageChangeListener(m_listener);
-	}
+    public void setOnPageChangeListener() {
+        super.setOnPageChangeListener(mListener);
+    }
 
-	@Override
-	public boolean onTouchEvent(MotionEvent event) {
+    private class PageChangeListener implements OnPageChangeListener {
 
-//		int currentIdx = getCurrentItem();
-//		MyPagerAdapter adapt = (MyPagerAdapter) getAdapter();
-//
-//		try {
-//			ImageFragment current = (ImageFragment) adapt.getItem(currentIdx);
-//			if (current.isZoomed())
-//				return true;
-//		} catch (ClassCastException e) {
-//			e.printStackTrace();
-//		}
+        @Override
+        public void onPageSelected(int pos) {
+            if (mLastLoadedId == -1
+                    || mLastLoadedId + 1 < ShowFeedFragment.NB_BASE_ITEMS
+                    || mLastLoadedId >= ShowFeedFragment.NB_MAX_ITEMS)
+                return;
 
-		return super.onTouchEvent(event);
-	}
+            if (pos + ShowFeedFragment.NB_BEFORE_CONTINUE_LOAD >= ShowFeedFragment.NB_BASE_ITEMS) {
+                int id = mLastLoadedId;
+                mLastLoadedId = -1;
+                if (mParent != null)
+                    mParent.launchLoading(id + 1);
+                else
+                    Log.v("ERROR", "myviewpager: no parent set");
+            }
+        }
 
-	private class PageChangeListener implements OnPageChangeListener {
+        @Override
+        public void onPageScrollStateChanged(int arg0) {
+        }
 
-		@Override
-		public void onPageSelected(int pos) {
-			if (m_lastLoadedId == -1
-					|| m_lastLoadedId + 1 < ShowFeedFragment.NB_BASE_ITEMS
-					|| m_lastLoadedId >= ShowFeedFragment.NB_MAX_ITEMS)
-				return;
-
-			if (pos + ShowFeedFragment.NB_BEFORE_CONTINUE_LOAD >= ShowFeedFragment.NB_BASE_ITEMS) {
-				int id = m_lastLoadedId;
-				m_lastLoadedId = -1;
-				if (m_parent != null)
-					m_parent.launchLoading(id + 1);
-				else
-					Log.v("ERROR", "myviewpager: no parent set");
-			}
-		}
-
-		@Override
-		public void onPageScrollStateChanged(int arg0) {
-		}
-
-		@Override
-		public void onPageScrolled(int arg0, float arg1, int arg2) {
-		}
-	}
+        @Override
+        public void onPageScrolled(int arg0, float arg1, int arg2) {
+        }
+    }
 }

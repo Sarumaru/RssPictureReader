@@ -8,12 +8,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.jujujuijk.android.asynctask.FeedParser;
+import com.jujujuijk.android.asynctask.ImageLoader;
+import com.jujujuijk.android.database.Feed;
 import com.jujujuijk.android.rssreader.MainActivity;
 import com.jujujuijk.android.rssreader.R;
-import com.jujujuijk.android.database.Feed;
-import com.jujujuijk.android.database.MyDatabase;
-import com.jujujuijk.android.asynctask.ImageLoader;
-import com.jujujuijk.android.asynctask.FeedParser;
 import com.jujujuijk.android.tools.MyPagerAdapter;
 import com.jujujuijk.android.tools.MyViewPager;
 
@@ -39,13 +38,13 @@ public class ShowFeedFragment
                              Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        View v = (View) inflater.inflate(R.layout.image_pager, container,
+        View v = (View) inflater.inflate(R.layout.item_pager, container,
                 false);
 
         if (!(getActivity() instanceof MainActivity))
             return null;
 
-        mFeed = ((MainActivity)getActivity()).getCurrentFeed();
+        mFeed = ((MainActivity) getActivity()).getCurrentFeed();
 
         myViewPager = (MyViewPager) v.findViewById(R.id.fragment_container);
 
@@ -92,7 +91,7 @@ public class ShowFeedFragment
             // we were waiting for the picture, load next
             launchLoading(id + 1);
         } else {
-            myViewPager.m_lastLoadedId = id;
+            myViewPager.mLastLoadedId = id;
         }
 
     }
@@ -151,7 +150,7 @@ public class ShowFeedFragment
             mPagerAdapter.add(new LoadingFragment());
             mPagerAdapter.notifyDataSetChanged();
         }
-        myViewPager.m_lastLoadedId = -1;
+        myViewPager.mLastLoadedId = -1;
         new ImageLoader(this, id).execute(b.getString("imageUrl"));
     }
 

@@ -1,15 +1,9 @@
 package com.jujujuijk.android.service;
 
-import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
-import android.widget.Toast;
 
-/**
- * Created by jujujuijk on 7/8/13.
- */
 public class NotificationServiceTools {
 
     static public boolean isMyServiceRunning(Context context) {
@@ -29,7 +23,6 @@ public class NotificationServiceTools {
     }
 
     /**
-     *
      * @param context
      * @return true if not started. false otherwise
      */

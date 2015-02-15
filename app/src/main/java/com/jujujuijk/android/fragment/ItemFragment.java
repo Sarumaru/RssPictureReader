@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,7 +38,7 @@ public class ItemFragment extends Fragment {
         Bundle b = getArguments();
 
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.image_show, container, false);
+        View v = inflater.inflate(R.layout.item_show, container, false);
         TextView meta = (TextView) v.findViewById(R.id.meta);
         TextView title = (TextView) v.findViewById(R.id.title);
         TextView link = (TextView) v.findViewById(R.id.link);

@@ -9,17 +9,14 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ListView;
 
-import com.jujujuijk.android.rssreader.MainActivity;
-import com.jujujuijk.android.rssreader.R;
 import com.jujujuijk.android.database.Feed;
 import com.jujujuijk.android.database.MyDatabase;
+import com.jujujuijk.android.rssreader.MainActivity;
+import com.jujujuijk.android.rssreader.R;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Claudy Focan on 12/07/13.
- */
 public class NotificationsDialog extends Dialog {
 
     MainActivity mParent = null;
