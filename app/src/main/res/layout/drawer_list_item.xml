@@ -15,31 +15,42 @@
   -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:orientation="horizontal"
-              android:background="@drawable/custom_background" >
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/custom_background"
+    android:orientation="vertical"
+    android:gravity="center">
 
-    <ImageView
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/drawerlist_cover"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@drawable/abc_cab_background_top_holo_dark"/>
+
+        <ImageView
             android:id="@+id/drawerlist_notifystar"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="match_parent"
+            android:layout_gravity="top|right"
+            android:layout_weight="1"
             android:gravity="center"
-            android:layout_gravity="left"
-            android:paddingLeft="6dp"/>
+            android:paddingRight="5dp"
+            android:paddingTop="5dp"
+            android:background="@android:drawable/btn_star_big_off"/>
+    </FrameLayout>
 
     <TextView
-            android:id="@+id/drawerlist_feed_name"
-            android:layout_width="0dp"
-            android:layout_weight="9"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical|center_horizontal"
-            android:textSize="22sp"
-            android:textColor="@drawable/custom_textcolor"
-            android:paddingTop="4dp"
-            android:paddingBottom="4dp"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp" />
+        android:id="@+id/drawerlist_feed_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:gravity="center_vertical|center_horizontal"
+        android:textColor="@android:color/white"
+        android:textSize="14sp"
+        android:singleLine="true"/>
 
 </LinearLayout>

@@ -1,6 +1,10 @@
 package com.jujujuijk.android.database;
 
 import android.R;
+import android.graphics.drawable.Drawable;
+import android.util.Log;
+
+import com.jujujuijk.android.asynctask.CoverLoader;
 
 import java.util.HashMap;
 
@@ -9,35 +13,47 @@ import java.util.HashMap;
  */
 public class Feed extends HashMap<String, String> {
 
+    private final static String TAG = "Feed";
     private long mId;
     private String mName;
     private String mUrl;
     private Integer mNotify = 0;
+    private Drawable mCover;
     private String mPictureSeen = "";
     private String mPictureLast = "";
 
-    public Feed () {
+    public Feed() {
 
     }
 
-    public Feed (String name, String url) {
+    public Feed(String name, String url) {
         mName = name;
         mUrl = url;
     }
 
-    public Feed (long id, String name, String url) {
+    public Feed(long id, String name, String url) {
         mId = id;
         mName = name;
         mUrl = url;
     }
 
-    public Feed (long id, String name, String url, int notify, String pictureSeen, String pictureLast) {
+    public Feed(long id, String name, String url, int notify, String pictureSeen, String pictureLast) {
         mId = id;
         mName = name;
         mUrl = url;
         mNotify = notify;
         mPictureSeen = pictureSeen;
         mPictureLast = pictureLast;
+    }
+
+    public void loadCover() {
+        if (this.mUrl != null) {
+            try {
+                this.mCover = new CoverLoader(this).execute().get();
+            } catch (Exception e) {
+                Log.e(TAG, "Exception occurred " + e.getClass().getName(), e);
+            }
+        }
     }
 
     @Override
@@ -82,6 +98,10 @@ public class Feed extends HashMap<String, String> {
         return mUrl;
     }
 
+    public Drawable getCover() {
+        return mCover;
+    }
+
     public void setUrl(String mUrl) {
         this.mUrl = mUrl;
     }
@@ -108,6 +128,10 @@ public class Feed extends HashMap<String, String> {
 
     public void setPictureLast(String mPictureLast) {
         this.mPictureLast = mPictureLast;
+    }
+
+    public void setCover(Drawable mCover) {
+        this.mCover = mCover;
     }
 
     static public abstract class Notify {

@@ -18,8 +18,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ListView;
-import android.widget.SimpleAdapter;
+import android.widget.FrameLayout;
+import android.widget.GridView;
 import android.widget.Toast;
 
 import com.jujujuijk.android.asynctask.AutocompleteDataParser;
@@ -30,6 +30,7 @@ import com.jujujuijk.android.fragment.SettingsFragment;
 import com.jujujuijk.android.fragment.ShowFeedFragment;
 import com.jujujuijk.android.service.NotificationService;
 import com.jujujuijk.android.service.NotificationServiceTools;
+import com.jujujuijk.android.tools.MyGridAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +42,8 @@ public class MainActivity extends FragmentActivity implements MyDatabase.IDataba
 
     // Attributes to perform DrawerLayout
     private DrawerLayout mDrawerLayout;
-    private ListView mDrawerList;
+    private FrameLayout mDrawerList;
+    private GridView mDrawerGrid;
     private ActionBarDrawerToggle mDrawerToggle;
     private CharSequence mDrawerTitle;
     private CharSequence mTitle;
@@ -85,24 +87,34 @@ public class MainActivity extends FragmentActivity implements MyDatabase.IDataba
         // Init DrawerLayout
         mTitle = mDrawerTitle = getTitle();
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerList = (ListView) findViewById(R.id.left_drawer);
+        mDrawerList = (FrameLayout) findViewById(R.id.left_drawer);
+        mDrawerGrid = (GridView) findViewById(R.id.grid_feed_list);
 
         // set a custom shadow that overlays the main content when the drawer opens
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 
         // set up the drawer's list view with items and click listener
-        mDrawerList.setAdapter(new SimpleAdapter(MainActivity.this,
+        MyGridAdapter adapter = new MyGridAdapter(this, mFeedList);
+        mDrawerGrid.setAdapter(adapter);
+        mDrawerGrid.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                selectItem(position);
+            }
+        });
+       /* mDrawerList.setAdapter(new SimpleAdapter(MainActivity.this,
                 mFeedList,
                 R.layout.drawer_list_item,
                 new String[]{"name", "notifystar"},
-                new int[]{R.id.drawerlist_feed_name, R.id.drawerlist_notifystar}));
+                new int[]{R.id.drawerlist_feed_name, R.id.drawerlist_notifystar}));*/
+        /*mDrawerList.setAdapter(adapter);
 
         mDrawerList.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 selectItem(position);
             }
-        });
+        });*/
 
         // enable ActionBar app icon to behave as action to toggle nav drawer
         getActionBar().setDisplayHomeAsUpEnabled(true);
@@ -219,7 +231,8 @@ public class MainActivity extends FragmentActivity implements MyDatabase.IDataba
     }
 
     private boolean handleButtonClick(int id) {
-        final int pos = mDrawerList.getCheckedItemPosition();
+//        final int pos = mDrawerList.getCheckedItemPosition();
+        final int pos = mDrawerGrid.getCheckedItemPosition();
 
         AlertDialog.Builder builder = null;
         Dialog dialog = null;
@@ -288,7 +301,8 @@ public class MainActivity extends FragmentActivity implements MyDatabase.IDataba
         if (mCurrentFeed == null || (mCurrentFeed.getId() != mFeedList.get(position).getId())) { // We didnt select the same item
             launchFeed(position);
             // update selected item and title, then close the drawer if wanted
-            mDrawerList.setItemChecked(position, true);
+            // mDrawerList.setItemChecked(position, true);
+            mDrawerGrid.setItemChecked(position, true);
             mTitle = mFeedList.get(position).getName();
         }
 
@@ -436,7 +450,8 @@ public class MainActivity extends FragmentActivity implements MyDatabase.IDataba
 
     @Override
     public void notifyFeedListChanged() {
-        ((SimpleAdapter) mDrawerList.getAdapter()).notifyDataSetChanged();
+//        ((SimpleAdapter) mDrawerList.getAdapter()).notifyDataSetChanged();
+        ((MyGridAdapter) mDrawerGrid.getAdapter()).notifyDataSetChanged();
     }
 
 }

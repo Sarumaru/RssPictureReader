@@ -176,6 +176,8 @@ public class MyDatabase extends SQLiteOpenHelper {
                 contact.setPictureSeen(cursor.getString(4));
                 contact.setPictureLast(cursor.getString(5));
 
+                contact.loadCover();
+
                 // Adding feed to list
                 mFeedList.add(contact);
             } while (cursor.moveToNext());

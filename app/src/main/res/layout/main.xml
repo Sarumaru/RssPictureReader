@@ -11,6 +11,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
+<!--
     <ListView
             android:id="@+id/left_drawer"
             android:layout_width="240dp"
@@ -20,5 +21,20 @@
             android:divider="@android:color/transparent"
             android:dividerHeight="0dp"
             android:background="#99111111"/>
+-->
+    <FrameLayout
+        android:id="@+id/left_drawer"
+        android:layout_width="@dimen/abc_panel_menu_list_width"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="0dp"
+        android:background="#99111111">
+        <include
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            layout="@layout/drawer_grid_view"/>
+
+    </FrameLayout>
 
 </android.support.v4.widget.DrawerLayout>
