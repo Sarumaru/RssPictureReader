@@ -63,15 +63,13 @@ public class ItemFragment extends Fragment {
                 else if (TimeUnit.MILLISECONDS.toMinutes(diffMs) > 0)
                     dateStr = String.valueOf(TimeUnit.MILLISECONDS.toMinutes(diffMs)) + " " + getResources().getString(R.string.minutes);
 
-                if (getResources().getConfiguration().locale == Locale.FRENCH)
+                if (getResources().getConfiguration().locale.equals(Locale.FRANCE))
                     dateStr = getResources().getString(R.string.ago) + " " + dateStr;
                 else
                     dateStr += " " + getResources().getString(R.string.ago);
 
             } catch (ParseException e) {
             }
-        } else {
-            dateStr = dateStr;
         }
 
         String metaStr = "";
