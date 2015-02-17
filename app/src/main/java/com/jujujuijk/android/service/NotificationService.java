@@ -21,9 +21,6 @@ import com.jujujuijk.android.rssreader.R;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by jujujuijk on 7/8/13.
- */
 public class NotificationService
         extends IntentService
         implements MyDatabase.IDatabaseWatcher, FeedParser.RssParserCallBack {

@@ -8,9 +8,6 @@ import com.jujujuijk.android.asynctask.CoverLoader;
 
 import java.util.HashMap;
 
-/**
- * Created by jujujuijk on 7/17/13.
- */
 public class Feed extends HashMap<String, String> {
 
     private final static String TAG = "Feed";
