@@ -19,8 +19,8 @@ public class Feed extends HashMap<String, String> {
     private String mUrl;
     private Integer mNotify = 0;
     private Drawable mCover;
-    private String mPictureSeen = "";
-    private String mPictureLast = "";
+    private String mItemSeen = "";
+    private String mItemLast = "";
 
     public Feed() {
 
@@ -42,8 +42,8 @@ public class Feed extends HashMap<String, String> {
         mName = name;
         mUrl = url;
         mNotify = notify;
-        mPictureSeen = pictureSeen;
-        mPictureLast = pictureLast;
+        mItemSeen = pictureSeen;
+        mItemLast = pictureLast;
     }
 
     public void loadCover() {
@@ -64,7 +64,7 @@ public class Feed extends HashMap<String, String> {
         else if (key.equals("notifystar")) {
             int res = 0;
             if ((mNotify & Notify.NOTIF) != 0) {
-                if (!mPictureLast.equals(mPictureSeen))
+                if (!mItemLast.equals(mItemSeen))
                     res = R.drawable.star_big_on;
                 else
                     res = R.drawable.star_big_off;
@@ -114,20 +114,20 @@ public class Feed extends HashMap<String, String> {
         this.mNotify = mNotify;
     }
 
-    public String getPictureSeen() {
-        return mPictureSeen;
+    public String getItemSeen() {
+        return mItemSeen;
     }
 
-    public void setPictureSeen(String mPictureSeen) {
-        this.mPictureSeen = mPictureSeen;
+    public void setItemSeen(String itemSeen) {
+        this.mItemSeen = itemSeen;
     }
 
-    public String getPictureLast() {
-        return mPictureLast;
+    public String getItemLast() {
+        return mItemLast;
     }
 
-    public void setPictureLast(String mPictureLast) {
-        this.mPictureLast = mPictureLast;
+    public void setItemLast(String itemLast) {
+        this.mItemLast = itemLast;
     }
 
     public void setCover(Drawable mCover) {

@@ -184,7 +184,7 @@ public class MainActivity extends FragmentActivity implements MyDatabase.IDataba
 
             ft.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.fade_out,
                     android.R.anim.slide_in_left, android.R.anim.fade_out);
-            ft.replace(R.id.main_fragment, new ShowFeedFragment(), "image").commit();
+            ft.replace(R.id.main_fragment, new ShowFeedFragment(), "item").commit();
 
             setTitle(mCurrentFeed.getName());
 
@@ -334,7 +334,7 @@ public class MainActivity extends FragmentActivity implements MyDatabase.IDataba
             ft.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right,
                     android.R.anim.slide_in_left, android.R.anim.slide_out_right);
 
-            Fragment prev = getSupportFragmentManager().findFragmentByTag("image");
+            Fragment prev = getSupportFragmentManager().findFragmentByTag("item");
             if (prev != null)
                 ft.hide(prev);
 

@@ -14,6 +14,8 @@ import org.w3c.dom.NodeList;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 
@@ -87,18 +89,20 @@ public class FeedParser extends
                         strLink = link.item(0).getTextContent();
                     if (category.getLength() > 0)
                         strCategory = category.item(0).getTextContent();
-
-
                     if (enclosure.getLength() > 0) {
                         Element tmp = (Element) enclosure.item(0);
                         if (tmp.getAttribute("type").contains("image"))
                             imageUrl = tmp.getAttribute("url");
                     }
-//                    final Pattern ptrn = Pattern.compile("<img src=\"(.+?)\"/>");
-//                    final Matcher mtchr = ptrn.matcher(strDesc);
-//                    if (mtchr.find()) {
-//                        imageUrl = strDesc.substring(mtchr.start(), mtchr.end()).replace("<img src=\"", "").replace("\"/>", "");
-//                    }
+
+                    // No image in 'enclosure' tag, try to find one in the description
+                    if (imageUrl == null) {
+                        final Pattern ptrn = Pattern.compile("<img src=\"(.+?)\"/>");
+                        final Matcher mtchr = ptrn.matcher(strDesc);
+                        if (mtchr.find()) {
+                            imageUrl = strDesc.substring(mtchr.start(), mtchr.end()).replace("<img src=\"", "").replace("\"/>", "");
+                        }
+                    }
 
 
                     Bundle b = new Bundle();

@@ -26,8 +26,8 @@ public class ServiceBroadcastReceiver extends BroadcastReceiver {
             List<Feed> toUpdate = new ArrayList<Feed>();
 
             for (Feed f : feedList) {
-                if (f.getNotify() == 1 && !f.getPictureLast().equals(f.getPictureSeen())) {
-                    f.setPictureSeen(f.getPictureLast());
+                if (f.getNotify() == 1 && !f.getItemLast().equals(f.getItemSeen())) {
+                    f.setItemSeen(f.getItemLast());
                     toUpdate.add(f);
                 }
             }

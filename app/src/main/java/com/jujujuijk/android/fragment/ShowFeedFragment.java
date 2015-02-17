@@ -11,6 +11,7 @@ import android.widget.Toast;
 import com.jujujuijk.android.asynctask.FeedParser;
 import com.jujujuijk.android.asynctask.ImageLoader;
 import com.jujujuijk.android.database.Feed;
+import com.jujujuijk.android.database.MyDatabase;
 import com.jujujuijk.android.rssreader.MainActivity;
 import com.jujujuijk.android.rssreader.R;
 import com.jujujuijk.android.tools.MyPagerAdapter;
@@ -70,11 +71,11 @@ public class ShowFeedFragment
         newFragment.setArguments(b);
         mPagerAdapter.add(newFragment);
 
-//        if (id == 0) { // 1st image
-//            mFeed.setPictureLast(b.getString("url"));
-//            mFeed.setPictureSeen(b.getString("url"));
-//            MyDatabase.getInstance().updateFeed(mFeed);
-//        }
+        if (id == 0) { // 1st image
+            mFeed.setItemLast(b.getString("title"));
+            mFeed.setItemSeen(b.getString("title"));
+            MyDatabase.getInstance().updateFeed(mFeed);
+        }
 
         try {
             mPagerAdapter.notifyDataSetChanged();

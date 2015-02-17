@@ -29,7 +29,7 @@ public class NotificationService
         implements MyDatabase.IDatabaseWatcher, FeedParser.RssParserCallBack {
 
     // Notification tools
-    public static final int NOTIFICATION_ID = 421337;
+    public static final int NOTIFICATION_ID = 387428;
     private NotificationManager mNotificationManager;
     private NotificationCompat.Builder mBuilder;
 
@@ -120,7 +120,7 @@ public class NotificationService
         String message = "";
         long firstImageId = -1;
         for (Feed f : feedList) {
-            if (f.getNotify() == Feed.Notify.NOTIF && !f.getPictureLast().equals(f.getPictureSeen())) {
+            if (f.getNotify() == Feed.Notify.NOTIF && !f.getItemLast().equals(f.getItemSeen())) {
                 if (firstImageId == -1) {
                     firstImageId = f.getId();
                 } else {
@@ -181,12 +181,12 @@ public class NotificationService
         if (feed == null)
             return;
 
-        String lastItem = items.get(0).getString("url");
+        String lastItem = items.get(0).getString("title");
 
-        if (feed.getPictureLast().equals(lastItem))
+        if (feed.getItemLast() != null && feed.getItemLast().equals(lastItem))
             return;
 
-        feed.setPictureLast(lastItem);
+        feed.setItemLast(lastItem);
 
         MyDatabase.getInstance().updateFeed(feed);
     }

@@ -3,10 +3,7 @@ package com.jujujuijk.android.database;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
-import android.util.Pair;
 
 import com.jujujuijk.android.rssreader.ApplicationContextProvider;
 
@@ -16,7 +13,7 @@ import java.util.List;
 public class MyDatabase extends SQLiteOpenHelper {
 
     // database version
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 1;
 
     // the name of the database and the table(s)
     private static String DB_NAME = "db_urls";
@@ -57,46 +54,15 @@ public class MyDatabase extends SQLiteOpenHelper {
                 "name TEXT NOT NULL, " +
                 "url TEXT NOT NULL, " +
                 "notify INTEGER DEFAULT 0, " +
-                "picture_seen TEXT DEFAULT '', " +
-                "picture_last TEXT DEFAULT ''" +
+                "item_seen TEXT DEFAULT '', " +
+                "item_last TEXT DEFAULT ''" +
                 ");";
         db.execSQL(CREATE_TABLE);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        if (oldVersion < 2) {
-            try {
-                // Backup old pairs name/url to push them after rebuilding the table
-                List<Pair<String, String>> backupList = new ArrayList<Pair<String, String>>();
-                Cursor c = db.rawQuery("SELECT * FROM name_url", null);
-                if (c != null) {
-                    int indexName = c.getColumnIndex("name");
-                    int indexUrl = c.getColumnIndex("url");
-                    while (c.moveToNext()) {
-                        backupList.add(new Pair<String, String>(c.getString(indexName), c.getString(indexUrl)));
-                    }
-                    c.close();
-                }
-
-                // Drop table
-                final String DROP_TABLE = "DROP TABLE IF EXISTS '" + TABLE_NAME + "'";
-                db.execSQL(DROP_TABLE);
-
-                // Create new table
-                onCreate(db);
-
-                // Fill the new table
-                for (Pair<String, String> p : backupList) {
-                    ContentValues values = new ContentValues();
-                    values.put("name", p.first);
-                    values.put("url", p.second);
-                    db.insert("name_url", null, values);
-                }
-            } catch (SQLiteException e) {
-                e.printStackTrace();
-            }
-        }
+        // No upgrades yet
     }
 
     /**
@@ -113,8 +79,8 @@ public class MyDatabase extends SQLiteOpenHelper {
         values.put("name", feed.getName());
         values.put("url", feed.getUrl());
         values.put("notify", feed.getNotify());
-        values.put("picture_seen", feed.getPictureSeen());
-        values.put("picture_last", feed.getPictureLast());
+        values.put("item_seen", feed.getItemSeen());
+        values.put("item_last", feed.getItemLast());
 
         // Inserting Row
         long id = db.insert(TABLE_NAME, null, values);
@@ -173,8 +139,8 @@ public class MyDatabase extends SQLiteOpenHelper {
                 contact.setUrl(cursor.getString(2));
 
                 contact.setNotify(Integer.parseInt(cursor.getString(3)));
-                contact.setPictureSeen(cursor.getString(4));
-                contact.setPictureLast(cursor.getString(5));
+                contact.setItemSeen(cursor.getString(4));
+                contact.setItemLast(cursor.getString(5));
 
                 contact.loadCover();
 
@@ -201,8 +167,8 @@ public class MyDatabase extends SQLiteOpenHelper {
         values.put("name", feed.getName());
         values.put("url", feed.getUrl());
         values.put("notify", feed.getNotify());
-        values.put("picture_seen", feed.getPictureSeen());
-        values.put("picture_last", feed.getPictureLast());
+        values.put("item_seen", feed.getItemSeen());
+        values.put("item_last", feed.getItemLast());
 
         // updating row
         int ret = db.update(TABLE_NAME, values, "id" + " = ?",
