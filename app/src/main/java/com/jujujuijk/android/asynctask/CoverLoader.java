@@ -13,6 +13,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
 
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -44,7 +46,34 @@ public class CoverLoader extends AsyncTask<Void, Void, Drawable> {
         URL coverUrl = getCoverUrl();
         if (coverUrl != null)
             try {
-                Bitmap bitmap = BitmapFactory.decodeStream(coverUrl.openConnection().getInputStream());
+                HttpURLConnection connection = (HttpURLConnection) coverUrl.openConnection();
+                connection.setDoInput(true);
+                connection.connect();
+                InputStream is = connection.getInputStream();
+
+                //Decode image size
+                BitmapFactory.Options o = new BitmapFactory.Options();
+                o.inJustDecodeBounds = true;
+                BitmapFactory.decodeStream(is, null, o);
+
+                connection = (HttpURLConnection) coverUrl.openConnection();
+                connection.setDoInput(true);
+                connection.connect();
+                is = connection.getInputStream();
+
+                //The new size we want to scale to
+                final int REQUIRED_SIZE = 100;
+
+                //Find the correct scale value. It should be the power of 2.
+                int scale = 1;
+                while (o.outWidth / scale / 2 >= REQUIRED_SIZE && o.outHeight / scale / 2 >= REQUIRED_SIZE)
+                    scale *= 2;
+
+                //Decode with inSampleSize
+                BitmapFactory.Options o2 = new BitmapFactory.Options();
+                o2.inSampleSize = scale;
+
+                Bitmap bitmap = BitmapFactory.decodeStream(is, null, o2);
 
                 Drawable cover = new BitmapDrawable(ApplicationContextProvider.getContext().getResources(), bitmap);
                 return cover;
@@ -54,6 +83,11 @@ public class CoverLoader extends AsyncTask<Void, Void, Drawable> {
         return null;
     }
 
+
+    @Override
+    protected void onPostExecute(Drawable cover) {
+        mFeed.setCover(cover);
+    }
 
     private URL getCoverUrl() {
 
@@ -70,6 +104,13 @@ public class CoverLoader extends AsyncTask<Void, Void, Drawable> {
             for (int i = 0; i < mNodes.getLength() && i < NB_MAX_LOAD && imageUrl == null; i++) {
                 Element elem = (Element) mNodes.item(i);
                 NodeList enclosure = elem.getElementsByTagName("enclosure");
+                NodeList desc = elem.getElementsByTagName("description");
+
+                if (desc.getLength() > 0) {
+                    Element tmp = (Element) enclosure.item(0);
+                    if (tmp.getAttribute("type").contains("image"))
+                        imageUrl = tmp.getAttribute("url");
+                }
 
                 if (enclosure.getLength() > 0) {
                     Element tmp = (Element) enclosure.item(0);

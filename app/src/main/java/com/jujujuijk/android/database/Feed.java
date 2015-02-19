@@ -5,6 +5,8 @@ import android.graphics.drawable.Drawable;
 import android.util.Log;
 
 import com.jujujuijk.android.asynctask.CoverLoader;
+import com.jujujuijk.android.rssreader.ApplicationContextProvider;
+import com.jujujuijk.android.rssreader.MainActivity;
 
 import java.util.HashMap;
 
@@ -46,7 +48,7 @@ public class Feed extends HashMap<String, String> {
     public void loadCover() {
         if (this.mUrl != null) {
             try {
-                this.mCover = new CoverLoader(this).execute().get();
+               new CoverLoader(this).execute();
             } catch (Exception e) {
                 Log.e(TAG, "Exception occurred " + e.getClass().getName(), e);
             }

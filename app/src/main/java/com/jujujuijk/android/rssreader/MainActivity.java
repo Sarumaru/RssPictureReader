@@ -94,7 +94,7 @@ public class MainActivity extends FragmentActivity implements MyDatabase.IDataba
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 
         // set up the drawer's list view with items and click listener
-        MyGridAdapter adapter = new MyGridAdapter(this, mFeedList);
+        final MyGridAdapter adapter = new MyGridAdapter(this, mFeedList);
         mDrawerGrid.setAdapter(adapter);
         mDrawerGrid.setOnItemClickListener(new OnItemClickListener() {
             @Override
@@ -136,6 +136,7 @@ public class MainActivity extends FragmentActivity implements MyDatabase.IDataba
             }
 
             public void onDrawerOpened(View drawerView) {
+                adapter.notifyDataSetChanged();
                 getActionBar().setTitle(mDrawerTitle);
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
             }

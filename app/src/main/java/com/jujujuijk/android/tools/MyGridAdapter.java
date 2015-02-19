@@ -64,19 +64,19 @@ public class MyGridAdapter extends BaseAdapter {
             ImageView notifyStar = (ImageView) convertView.findViewById(R.id.drawerlist_notifystar);
 
             // getting feed item
-            Feed item = feedList.get(position);
+            Feed item = getItem(position);
 
 
             name.setText(item.getName());
 
-            item.loadCover();
-
-            if (item.getCover() != null) {
+            if (item.getCover() == null)
+                item.loadCover();
+            else {
                 int sdk = android.os.Build.VERSION.SDK_INT;
                 if (sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
-                    cover.setBackgroundDrawable(item.getCover());
+                    cover.setImageDrawable(item.getCover());
                 } else {
-                    cover.setBackground(item.getCover());
+                    cover.setImageDrawable(item.getCover());
                 }
             }
 
