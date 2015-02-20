@@ -123,7 +123,7 @@ public class CoverLoader extends AsyncTask<Void, Void, Drawable> {
                         imageUrl = tmp.getAttribute("url");
                 }
 
-                if (desc.getLength() != 1) {
+                if (desc.getLength() > 0) {
                     String strDesc = desc.item(0).getTextContent();
                     if (imageUrl == null) {
                         final Pattern ptrn = Pattern.compile("<img src=\"(.+?)\"/>");

@@ -85,18 +85,28 @@ public class MyGridAdapter extends BaseAdapter implements CoverLoader.CoverLoade
                 }
             }
             if (coverToSet != null) {
-                cover.setImageDrawable(coverToSet);
+                int sdk = android.os.Build.VERSION.SDK_INT;
+                if (sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+                    cover.setBackgroundDrawable(coverToSet);
+                } else {
+                    cover.setBackground(coverToSet);
+                }
             } else
-                cover.setImageDrawable(activity.getResources().getDrawable(R.drawable.abc_cab_background_top_holo_dark));
+                cover.setBackgroundResource(R.drawable.abc_cab_background_top_holo_dark);
 
 
             if (item.getNotify() != 0)
                 notifyStar.setVisibility(View.VISIBLE);
             else
                 notifyStar.setVisibility(View.GONE);
-        } catch (Exception e) {
+        } catch (
+                Exception e
+                )
+
+        {
             Log.e(TAG, "Exception occurred " + e.getClass().getName(), e);
         }
+
         return convertView;
     }
 
