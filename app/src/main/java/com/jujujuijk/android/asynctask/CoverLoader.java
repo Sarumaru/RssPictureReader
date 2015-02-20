@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 
 import com.jujujuijk.android.database.Feed;
 import com.jujujuijk.android.rssreader.ApplicationContextProvider;
+import com.jujujuijk.android.tools.MyGridAdapter;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -16,6 +17,8 @@ import org.w3c.dom.NodeList;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 
@@ -23,18 +26,20 @@ import javax.xml.parsers.DocumentBuilderFactory;
  * Created by Thebestsong on 15/02/15.
  */
 public class CoverLoader extends AsyncTask<Void, Void, Drawable> {
-    protected Feed mFeed;
-    protected URL mUrl;
+    private URL mUrl;
+    private String feedName;
 
     private static final int NB_MAX_LOAD = 5;
     private Document mDoc;
     private Element mRoot;
     private NodeList mNodes;
+    private MyGridAdapter mAdapter;
 
-    public CoverLoader(final Feed feed) {
-        mFeed = feed;
+    public CoverLoader(final MyGridAdapter adapter, String Url, String name) {
+        feedName = name;
+        mAdapter = adapter;
         try {
-            mUrl = new URL(mFeed.getUrl());
+            mUrl = new URL(Url);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -86,7 +91,13 @@ public class CoverLoader extends AsyncTask<Void, Void, Drawable> {
 
     @Override
     protected void onPostExecute(Drawable cover) {
-        mFeed.setCover(cover);
+//        mFeed.setCover(cover);
+        mAdapter.onCoverLoaderPostExecute(cover, feedName);
+    }
+
+
+    public interface CoverLoaderCallBack {
+        abstract void onCoverLoaderPostExecute(Drawable cover, String feedName);
     }
 
     private URL getCoverUrl() {
@@ -106,17 +117,23 @@ public class CoverLoader extends AsyncTask<Void, Void, Drawable> {
                 NodeList enclosure = elem.getElementsByTagName("enclosure");
                 NodeList desc = elem.getElementsByTagName("description");
 
-                if (desc.getLength() > 0) {
-                    Element tmp = (Element) enclosure.item(0);
-                    if (tmp.getAttribute("type").contains("image"))
-                        imageUrl = tmp.getAttribute("url");
-                }
-
                 if (enclosure.getLength() > 0) {
                     Element tmp = (Element) enclosure.item(0);
                     if (tmp.getAttribute("type").contains("image"))
                         imageUrl = tmp.getAttribute("url");
                 }
+
+                if (desc.getLength() != 1) {
+                    String strDesc = desc.item(0).getTextContent();
+                    if (imageUrl == null) {
+                        final Pattern ptrn = Pattern.compile("<img src=\"(.+?)\"/>");
+                        final Matcher mtchr = ptrn.matcher(strDesc);
+                        if (mtchr.find()) {
+                            imageUrl = strDesc.substring(mtchr.start(), mtchr.end()).replace("<img src=\"", "").replace("\"/>", "");
+                        }
+                    }
+                }
+
             }
 
             if (imageUrl != null)

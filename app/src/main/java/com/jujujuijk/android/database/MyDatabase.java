@@ -142,7 +142,7 @@ public class MyDatabase extends SQLiteOpenHelper {
                 contact.setItemSeen(cursor.getString(4));
                 contact.setItemLast(cursor.getString(5));
 
-                contact.loadCover();
+//                contact.loadCover();
 
                 // Adding feed to list
                 mFeedList.add(contact);

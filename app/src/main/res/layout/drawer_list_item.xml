@@ -33,14 +33,13 @@
 
         <ImageView
             android:id="@+id/drawerlist_notifystar"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:layout_gravity="top|right"
-            android:layout_weight="1"
             android:gravity="center"
             android:paddingRight="5dp"
             android:paddingTop="5dp"
-            android:background="@android:drawable/btn_star_big_off"/>
+            android:background="@android:drawable/btn_star"/>
     </FrameLayout>
 
     <TextView

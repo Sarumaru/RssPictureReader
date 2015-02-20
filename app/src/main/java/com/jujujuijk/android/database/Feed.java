@@ -17,7 +17,6 @@ public class Feed extends HashMap<String, String> {
     private String mName;
     private String mUrl;
     private Integer mNotify = 0;
-    private Drawable mCover;
     private String mItemSeen = "";
     private String mItemLast = "";
 
@@ -43,16 +42,6 @@ public class Feed extends HashMap<String, String> {
         mNotify = notify;
         mItemSeen = pictureSeen;
         mItemLast = pictureLast;
-    }
-
-    public void loadCover() {
-        if (this.mUrl != null) {
-            try {
-               new CoverLoader(this).execute();
-            } catch (Exception e) {
-                Log.e(TAG, "Exception occurred " + e.getClass().getName(), e);
-            }
-        }
     }
 
     @Override
@@ -97,10 +86,6 @@ public class Feed extends HashMap<String, String> {
         return mUrl;
     }
 
-    public Drawable getCover() {
-        return mCover;
-    }
-
     public void setUrl(String mUrl) {
         this.mUrl = mUrl;
     }
@@ -127,10 +112,6 @@ public class Feed extends HashMap<String, String> {
 
     public void setItemLast(String itemLast) {
         this.mItemLast = itemLast;
-    }
-
-    public void setCover(Drawable mCover) {
-        this.mCover = mCover;
     }
 
     static public abstract class Notify {

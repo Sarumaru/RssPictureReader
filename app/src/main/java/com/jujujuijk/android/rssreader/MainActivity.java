@@ -13,6 +13,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,6 +24,7 @@ import android.widget.GridView;
 import android.widget.Toast;
 
 import com.jujujuijk.android.asynctask.AutocompleteDataParser;
+import com.jujujuijk.android.asynctask.CoverLoader;
 import com.jujujuijk.android.database.Feed;
 import com.jujujuijk.android.database.MyDatabase;
 import com.jujujuijk.android.dialog.AddFeedDialog;
@@ -102,6 +104,8 @@ public class MainActivity extends FragmentActivity implements MyDatabase.IDataba
                 selectItem(position);
             }
         });
+
+        setCovers();
        /* mDrawerList.setAdapter(new SimpleAdapter(MainActivity.this,
                 mFeedList,
                 R.layout.drawer_list_item,
@@ -149,6 +153,17 @@ public class MainActivity extends FragmentActivity implements MyDatabase.IDataba
             selectItem(MyDatabase.getInstance().getFeedIdx(feedId));
         } else if (savedInstanceState == null) {
             selectItem(0);
+        }
+    }
+
+    private void setCovers() {
+        try {
+            for (int i = 0; i < mFeedList.size(); i++) {
+                new CoverLoader(((MyGridAdapter) mDrawerGrid.getAdapter()),
+                        mFeedList.get(i).getUrl(), mFeedList.get(i).getName()).execute();
+            }
+        } catch (Exception e) {
+            Log.e("MainActivity", "Exception occurred " + e.getClass().getName(), e);
         }
     }
 
@@ -201,6 +216,8 @@ public class MainActivity extends FragmentActivity implements MyDatabase.IDataba
             return (true);
 
         MyDatabase.getInstance().addFeed(new Feed(newName, newUrl));
+        new CoverLoader(((MyGridAdapter) mDrawerGrid.getAdapter()), newUrl, newName).execute();
+
         return (false);
     }
 

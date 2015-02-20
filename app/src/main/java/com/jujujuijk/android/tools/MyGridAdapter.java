@@ -2,7 +2,9 @@ package com.jujujuijk.android.tools;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,24 +12,29 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.jujujuijk.android.asynctask.CoverLoader;
 import com.jujujuijk.android.database.Feed;
 import com.jujujuijk.android.rssreader.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by Thebestsong on 15/02/15.
  */
-public class MyGridAdapter extends BaseAdapter {
+public class MyGridAdapter extends BaseAdapter implements CoverLoader.CoverLoaderCallBack {
     private static final String TAG = "GridAdapter";
+
     private Activity activity;
     private LayoutInflater inflater;
     private List<Feed> feedList;
+    private List<Pair<String, Drawable>> coversList = new ArrayList<Pair<String, Drawable>>();
 
 
     public MyGridAdapter(Activity activity, List<Feed> feedList) {
         this.activity = activity;
         this.feedList = feedList;
+
     }
 
     @Override
@@ -65,20 +72,22 @@ public class MyGridAdapter extends BaseAdapter {
 
             // getting feed item
             Feed item = getItem(position);
+            Drawable coverToSet = null;
 
 
             name.setText(item.getName());
 
-            if (item.getCover() == null)
-                item.loadCover();
-            else {
-                int sdk = android.os.Build.VERSION.SDK_INT;
-                if (sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
-                    cover.setImageDrawable(item.getCover());
-                } else {
-                    cover.setImageDrawable(item.getCover());
+
+            for (int i = 0; i < coversList.size(); i++) {
+                if (coversList.get(i).first.equals(item.getName())) {
+                    coverToSet = coversList.get(i).second;
+                    break;
                 }
             }
+            if (coverToSet != null) {
+                cover.setImageDrawable(coverToSet);
+            } else
+                cover.setImageDrawable(activity.getResources().getDrawable(R.drawable.abc_cab_background_top_holo_dark));
 
 
             if (item.getNotify() != 0)
@@ -89,5 +98,24 @@ public class MyGridAdapter extends BaseAdapter {
             Log.e(TAG, "Exception occurred " + e.getClass().getName(), e);
         }
         return convertView;
+    }
+
+
+    private void loadCover(Feed feed) {
+        try {
+            new CoverLoader(this, feed.getUrl(), feed.getName()).execute();
+        } catch (Exception e) {
+            Log.e(TAG, "Exception occurred " + e.getClass().getName(), e);
+        }
+    }
+
+    @Override
+    public void onCoverLoaderPostExecute(Drawable cover, String feedName) {
+        for (int i = 0; i < coversList.size(); i++) {
+            if (coversList.get(i).first.equals(feedName))
+                return;
+        }
+        coversList.add(new Pair<String, Drawable>(feedName, cover));
+        notifyDataSetChanged();
     }
 }
