@@ -152,7 +152,7 @@ public class ShowFeedFragment
             mPagerAdapter.notifyDataSetChanged();
         }
         myViewPager.mLastLoadedId = -1;
-        new ImageLoader(this, id).execute(b.getString("imageUrl"));
+        new ImageLoader(this, id).execute(b.getString("description").contains(b.getString("imageUrl")) ? null : b.getString("imageUrl"));
     }
 
 }

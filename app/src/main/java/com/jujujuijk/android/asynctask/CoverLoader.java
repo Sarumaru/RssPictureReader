@@ -126,10 +126,17 @@ public class CoverLoader extends AsyncTask<Void, Void, Drawable> {
                 if (desc.getLength() > 0) {
                     String strDesc = desc.item(0).getTextContent();
                     if (imageUrl == null) {
-                        final Pattern ptrn = Pattern.compile("<img src=\"(.+?)\"/>");
-                        final Matcher mtchr = ptrn.matcher(strDesc);
+                        Pattern ptrn = Pattern.compile("<img(.*)/>");
+                        Matcher mtchr = ptrn.matcher(strDesc);
                         if (mtchr.find()) {
-                            imageUrl = strDesc.substring(mtchr.start(), mtchr.end()).replace("<img src=\"", "").replace("\"/>", "");
+                            imageUrl = strDesc.substring(mtchr.start(), mtchr.end()).replace("<img", "").replace("/>", "");
+                            ptrn = Pattern.compile("src=\"(.*)\"");
+                            mtchr = ptrn.matcher(imageUrl);
+                            if (mtchr.find()) {
+                                imageUrl = imageUrl.substring(mtchr.start(), mtchr.end()).replace("src=\"", "").replaceFirst("\"(.*)", "");
+                            } else {
+                                imageUrl = null;
+                            }
                         }
                     }
                 }

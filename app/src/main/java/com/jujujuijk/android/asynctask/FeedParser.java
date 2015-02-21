@@ -97,10 +97,17 @@ public class FeedParser extends
 
                     // No image in 'enclosure' tag, try to find one in the description
                     if (imageUrl == null) {
-                        final Pattern ptrn = Pattern.compile("<img src=\"(.+?)\"/>");
-                        final Matcher mtchr = ptrn.matcher(strDesc);
+                        Pattern ptrn = Pattern.compile("<img(.*)/>");
+                        Matcher mtchr = ptrn.matcher(strDesc);
                         if (mtchr.find()) {
-                            imageUrl = strDesc.substring(mtchr.start(), mtchr.end()).replace("<img src=\"", "").replace("\"/>", "");
+                            imageUrl = strDesc.substring(mtchr.start(), mtchr.end()).replace("<img", "").replace("/>", "");
+                            ptrn = Pattern.compile("src=\"(.*)\"");
+                            mtchr = ptrn.matcher(imageUrl);
+                            if (mtchr.find()) {
+                                imageUrl = imageUrl.substring(mtchr.start(), mtchr.end()).replace("src=\"", "").replaceFirst("\"(.*)", "");
+                            } else {
+                                imageUrl = null;
+                            }
                         }
                     }
 
